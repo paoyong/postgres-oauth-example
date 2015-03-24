@@ -1,0 +1,21 @@
+{
+  "name": "oauth",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bookshelf": "^0.7.9",
+    "express": "^4.12.3",
+    "express-session": "^1.10.4",
+    "jade": "^1.9.2",
+    "knex": "^0.7.6",
+    "passport": "^0.2.1",
+    "passport-local": "^1.0.0",
+    "pg": "^4.3.0"
+  }
+}
