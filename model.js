@@ -5,8 +5,6 @@ var User = DB.Model.extend({
     idAttribute: 'username'
 });
 
-console.log(User);
-
 module.exports = {
     User: User
 };

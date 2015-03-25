@@ -6,8 +6,8 @@ block content
         p Error signing in: 
             span= errorMessage
     form(name="signin", action="/signin", method="post")
-        input(type="text", name="user")
-        input(type="password", name="pass")
+        input(type="text", name="username")
+        input(type="password", name="password")
         input(type="submit", value="login")
 
     hr

@@ -16,18 +16,27 @@ router.get('/', function(req, res, next) {
     if (!req.isAuthenticated()) {
         res.redirect('/signin');
     } else {
-        res.render('index');
+        var user = req.user;
+
+        if (user !== undefined) {
+            user = user.toJSON();
+            console.log(user);
+        }
+
+        res.render('index', {title: 'Oauth Test', user: user});
     }
 });
 
 router.get('/signin', function(req, res, next) {
-    res.render('signin', { title: 'Sign In' });
+    if (req.isAuthenticated()) {
+        res.redirect('/');
+    } else {
+        res.render('signin', { title: 'Sign In' });
+    }
 });
 
 // Add user to database.
 router.post('/signin', function(req, res, next) {
-    console.log('Signing in user!');
-
     passport.authenticate('local', {
                          successRedirect: '/',
                          failureRedirect: '/signin'
@@ -59,9 +68,29 @@ router.get('/signup', function(req, res, next) {
 });
 
 router.post('/signup', function(req, res, next) {
-    console.log('Signup route');
-    console.log(req.body);
+    // Here, req.body is { username, password }
     var user = req.body;
+
+    // Before making the account, try and fetch a username to see if it already exists.
+    var usernamePromise = new Model.User({ username: user.username }).fetch();
+
+    return usernamePromise.then(function(model) {
+        if (model) {
+            res.render('signup', { title: 'signup', errorMessage: 'username already exists' });
+        } else {
+            var password = user.password;
+            var hash = bcrypt.hashSync(password);
+
+            // Make a new postgres db row of the account
+            var signUpUser = new Model.User({ username: user.username, password: hash });
+            console.log(signUpUser);
+
+            signUpUser.save({}, {method: 'insert'}).then(function(model) {
+                // Sign in the newly registered uesr
+                res.redirect(307, '/signin');
+            });
+        }
+    });
 });
 
 module.exports = router;

@@ -3,9 +3,26 @@ var express = require('express'),
     router = require('./routes/router.js'),
     app = express(),
     path = require('path'),
+    bcrypt = require('bcrypt-nodejs'),
     passport = require('passport'),
+    session = require('express-session'),
+    bodyParser = require('body-parser'),
     LocalStrategy = require('passport-local').Strategy;
     PORT = process.env.PORT || 1337;
+
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser());
+app.use(session({ secret: 'hamster kitten fight' }))
+
+passport.serializeUser(function(user, done) {
+    done(null, user.username);
+});
+
+passport.deserializeUser(function(username, done) {
+    new Model.User({username: username}).fetch().then(function(user) {
+        done(null, user);
+    });
+});
 
 passport.use(new LocalStrategy(function(username, password, done) {
     new Model.User({username: username}).fetch().then(function(data) {
@@ -24,15 +41,8 @@ passport.use(new LocalStrategy(function(username, password, done) {
     });
 }));
 
-var usernamePromise = new Model.User({username: 'keithy'}).fetch();
-
-usernamePromise.then(function(model) {
-    if (model) {
-        console.log(model);
-    } else {
-        console.log('Username not found.');
-    }
-});
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');

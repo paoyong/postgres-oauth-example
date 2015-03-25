@@ -5,14 +5,15 @@ block content
     p Password goes through bcrypt before going into the database.
 
     form(name="signup", action="/signup", method="post")
-        label(for="username") Username
-        input(type="text", name="username", placeholder="Enter your username...")
-        br
+        div.row
+            div.six.columns
+                    label(for="username") Username
+                    input.u-full-width(type="text", name="username", placeholder="Enter your username...")
 
-        label(for="password") Password
-        input(type="password", name="password", required="true", placeholder="Enter your password...")
-        br
+                    label(for="password") Password
+                    input.u-full-width(type="password", name="password", required="true", placeholder="Enter your password...")
 
-        input(type="submit", value="Register", required="true")
+        div.row
+            input(type="submit", value="Register")
 
     p= errorMessage

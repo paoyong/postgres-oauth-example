@@ -2,7 +2,9 @@ extends layout
 
 block content
     h1 Oauth Test
-    h2 Goal is to have twitter, google+, facebook, and local working.
+    p Goal is to have twitter, google+, facebook, and local working.
+    if user
+        p Logged in as 
+            span= user.username
     
     a(href="/signout", title="sign out") Sign Out
-    p= username
