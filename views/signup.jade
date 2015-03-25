@@ -1,0 +1,18 @@
+extends layout
+
+block content
+    h1= title
+    p Password goes through bcrypt before going into the database.
+
+    form(name="signup", action="/signup", method="post")
+        label(for="username") Username
+        input(type="text", name="username", placeholder="Enter your username...")
+        br
+
+        label(for="password") Password
+        input(type="password", name="password", required="true", placeholder="Enter your password...")
+        br
+
+        input(type="submit", value="Register", required="true")
+
+    p= errorMessage

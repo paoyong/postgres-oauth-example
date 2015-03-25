@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
     "bookshelf": "^0.7.9",
     "express": "^4.12.3",
     "express-session": "^1.10.4",
