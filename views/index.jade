@@ -2,6 +2,9 @@ extends layout
 
 block content
     h1 Oauth Test
+    if errorMessage
+        p.errorMessage
+            span= errorMessage
     p Goal is to have twitter, google+, facebook, and local working.
     if user
         p Logged in as 

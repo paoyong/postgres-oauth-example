@@ -3,12 +3,17 @@ extends layout
 block content
     h1= title
     if errorMessage
-        p Error signing in: 
+        p.errorMessage Error signing in: 
             span= errorMessage
     form(name="signin", action="/signin", method="post")
-        input(type="text", name="username")
-        input(type="password", name="password")
-        input(type="submit", value="login")
+        div.row
+            div.six.columns
+                    label(for="username") Username
+                    input.u-full-width(type="text", name="username", placeholder="Enter your username...")
 
-    hr
-    a(href="/signup") Sign up for an account.
+                    label(for="password") Password
+                    input.u-full-width(type="password", name="password", required="true", placeholder="Enter your password...")
+
+        div.row
+            input(type="submit", value="Login")
+        a(href="/signup") Sign up for an account.
