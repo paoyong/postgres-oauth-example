@@ -1,6 +1,6 @@
 drop database if exists oauth_test;
 
-create database if not exists oauth_test;
+create database oauth_test;
 
 \connect oauth_test;
 
