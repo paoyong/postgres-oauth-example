@@ -10,7 +10,7 @@ module.exports = {
     'twitterAuth' : {
         'consumerKey'   : '',
         'consumerSecret': '',
-        'callbackURL'   : 'http://localhost:' + port + '/auth/facebook/callback'
+        'callbackURL'   : 'http://localhost:' + port + '/auth/twitter/callback'
     },
     'googleAuth' : {
         'clientID'      : '',
