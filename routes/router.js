@@ -10,7 +10,6 @@ var bcrypt = require('bcrypt-nodejs');
 var Model = require('../model.js');
 
 router.get('/', function(req, res, next) {
-
     // If user is not authenticated, redirect them
     // to the signin page.
     if (!req.isAuthenticated()) {
@@ -20,7 +19,6 @@ router.get('/', function(req, res, next) {
 
         if (user !== undefined) {
             user = user.toJSON();
-            console.log(user);
         }
 
         res.render('index', {title: 'Oauth Test', user: user});

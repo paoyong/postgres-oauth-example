@@ -1,14 +1,15 @@
-var express = require('express'),
-    Model = require('./model'),
-    router = require('./routes/router.js'),
-    app = express(),
-    path = require('path'),
-    bcrypt = require('bcrypt-nodejs'),
-    passport = require('passport'),
-    session = require('express-session'),
-    bodyParser = require('body-parser'),
-    LocalStrategy = require('passport-local').Strategy;
-    PORT = process.env.PORT || 1337;
+var config        = require('./config'),
+    express       = require('express'),
+    Model         = require('./model'),
+    router        = require('./routes/router.js'),
+    path          = require('path'),
+    bcrypt        = require('bcrypt-nodejs'),
+    passport      = require('passport'),
+    session       = require('express-session'),
+    bodyParser    = require('body-parser'),
+    LocalStrategy = require('passport-local').Strategy,
+    app           = express(),
+    PORT          = process.env.PORT || config.port;
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser());
