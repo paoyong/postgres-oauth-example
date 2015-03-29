@@ -16,6 +16,7 @@ router.get('/', function(req, res, next) {
         res.redirect('/signin');
     } else {
         var user = req.user;
+        console.log(user);
 
         if (user !== undefined) {
             user = user.toJSON();
@@ -81,7 +82,6 @@ router.post('/signup', function(req, res, next) {
 
             // Make a new postgres db row of the account
             var signUpUser = new Model.User({ username: user.username, password: hash });
-            console.log(signUpUser);
 
             signUpUser.save({}, {method: 'insert'}).then(function(model) {
                 // Sign in the newly registered uesr

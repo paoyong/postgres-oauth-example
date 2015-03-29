@@ -7,11 +7,11 @@ var config           = require('./config.js'),
 
 module.exports = function(passport) {
     passport.serializeUser(function(user, done) {
-        done(null, user.username);
+        done(null, user.id);
     });
 
-    passport.deserializeUser(function(username, done) {
-        new Model.User({username: username}).fetch().then(function(user) {
+    passport.deserializeUser(function(id, done) {
+        new Model.User({id: id}).fetch().then(function(user) {
             done(null, user);
         });
     });
@@ -25,7 +25,7 @@ module.exports = function(passport) {
                 user = data.toJSON();
 
                 if (!bcrypt.compareSync(password, user.password)) {
-                    return done(null, false, { message: 'Invalid username or password' });
+                    return done(null, false, { message: 'Invalid password' });
                 } else {
                     return done(null, user);
                 }
@@ -39,13 +39,28 @@ module.exports = function(passport) {
         callbackURL     : config.facebookAuth.callbackURL
     }, function(token, refreshToken, profile, done) {
         process.nextTick(function() {
-            new Model.Facebook({ facebook_id: profile.id }).fetch().then(function(user) {
-                if (user) {
-                    return done(null, user);
+            new Model.Facebook({ facebook_id: profile.id }).fetch().then(function(fbUser) {
+                if (fbUser) {
+                    // TODO: Handle case where there IS user, but no facebook user
+                    console.log(fbUser);
+                    return done(null, fbUser);
                 } else {
                     // If there is no user found, then create one
                     new User().save().then(function(user) {
-                        console.log(user.toJSON());
+                        var newUserId = user.toJSON().id;
+
+                        var newFBUser = {
+                            id: newUserId,
+                            token: token,
+                            facebook_id: profile.id,
+                            email: profile.emails[0].value,
+                            name: profile.name.givenName + ' ' + profile.name.familyName
+                        };
+
+                        // Create new Facebook user with token.
+                        new Model.Facebook(newFBUser).save({}, { method: 'insert' }).then(function(facebook) {
+                            return done(null, newFBUser);
+                        });
                     });
                 }
             });

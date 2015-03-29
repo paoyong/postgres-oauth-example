@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS facebook (
     id              SERIAL,
-    token           VARCHAR(100) NOT NULL,
+    token           TEXT NOT NULL,
     facebook_id     VARCHAR(100) UNIQUE,
     email           VARCHAR(100),
     name            VARCHAR(100),

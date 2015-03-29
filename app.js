@@ -13,9 +13,13 @@ var config        = require('./config'),
 
 require('./passport.js')(passport);
 
+app.use(function(req, res, next) {
+    console.log('Time: ', Date.now());
+    next();
+});
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser());
-app.use(session({ secret: 'hamster kitten fight' }))
+app.use(session({ secret: 'hamster kitten fight' }));
 
 app.use(passport.initialize());
 app.use(passport.session());
