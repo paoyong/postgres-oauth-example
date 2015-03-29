@@ -5,7 +5,7 @@ A demonstration of postgres oauth in node. Heavily follows [this guide](https://
 This app requires a basic postgres setup. It also requires a lot of private Oauth application setup from Facebook, Twitter, and Google involving developer access to their Oauth services. This involves filling in `config.js`.
 
 1. Git clone
-2. Make sure you have postgres set up with user `postgres` with password `postgres`. So create the user with that password. To user another user, change the knex connection config in the code.
+2. Make sure you have postgres set up with user `postgres` with password `postgres`. So create the user with that password. To use another user, change the knex connection config in the code.
 4. `postgres` user should have createdb priviledges. To do so: `ALTER USER postgres createdb` in psql. 
 5. Run the `psql_script.sql` script into postgres. Try using
     `psql -U postgres -a -f psql_script.sql`.
