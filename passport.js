@@ -23,7 +23,6 @@ module.exports = function(passport) {
                 return done(null, false, { message: 'Invalid username or password' });
             } else {
                 user = data.toJSON();
-
                 if (!bcrypt.compareSync(password, user.password)) {
                     return done(null, false, { message: 'Invalid password' });
                 } else {
