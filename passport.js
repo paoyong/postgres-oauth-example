@@ -7,12 +7,15 @@ var config           = require('./config.js'),
 
 module.exports = function(passport) {
     passport.serializeUser(function(user, done) {
+        console.log('Serializing user ' + user.id);
         done(null, user.id);
     });
 
     passport.deserializeUser(function(id, done) {
-        new Model.User({id: id}).fetch().then(function(user) {
-            done(null, user);
+        console.log('Deserializing user ' + id);
+
+        Model.grabUserCredentials(id, function(err, user) {
+            done(err, user);
         });
     });
 

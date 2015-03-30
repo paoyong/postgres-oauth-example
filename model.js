@@ -60,6 +60,8 @@ var Google = DB.Model.extend({
 //     },
 // }
 function grabUserCredentials(userId, callback) {
+    console.log('calling grabUserCredentials on user ' + userId);
+
     // Skeleton JSON
     var loginUser = {
         local: {
@@ -88,7 +90,15 @@ function grabUserCredentials(userId, callback) {
 
     // SQL joins to get all credentials/tokens of a single user
     // to fill in loginUser JSON.
-    knex.select('users.id', 'users.username', 'users.password', 'facebook.token as fb_token', 'facebook.email as fb_email', 'facebook.name as fb_name', 'twitter.token as tw_token', 'twitter.display_name as tw_disp_name', 'twitter.username as tw_username', 'google.token as g_token', 'google.email as g_email', 'google.name as g_name').from('users').leftOuterJoin('facebook', 'facebook.id', '=', 'users.id').leftOuterJoin('twitter', 'twitter.id', '=', 'users.id').leftOuterJoin('google', 'google.id', '=', 'users.id').where('users.id', '=', userId).then(function(row) {
+    knex.select('users.id', 'users.username', 'users.password',
+                'facebook.token as fb_token', 'facebook.email as fb_email', 'facebook.name as fb_name',
+                'twitter.token as tw_token', 'twitter.display_name as tw_disp_name', 'twitter.username as tw_username',
+                'google.token as g_token', 'google.email as g_email', 'google.name as g_name')
+                .from('users')
+                .leftOuterJoin('facebook', 'facebook.id', '=', 'users.id')
+                .leftOuterJoin('twitter', 'twitter.id', '=', 'facebook.id')
+                .leftOuterJoin('google', 'google.id', '=', 'twitter.id')
+                .where('users.id', '=', userId).then(function(row) {
         row = row[0];
 
         if (!row) {
@@ -109,17 +119,11 @@ function grabUserCredentials(userId, callback) {
             loginUser.google.email = row.g_email;
             loginUser.google.name = row.g_name;
 
+            console.log('Successful grabUserCredentials');
             callback(null, loginUser);
         }
     });
 };
-
-grabUserCredentials(322, function(err, loginUser) {
-    if (err) 
-        console.log(err);
-    else 
-        console.log(loginUser);
-});
 
 module.exports = {
     grabUserCredentials: grabUserCredentials,

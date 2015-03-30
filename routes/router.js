@@ -12,16 +12,11 @@ var Model = require('../model.js');
 router.get('/', function(req, res, next) {
     // If user is not authenticated, redirect them
     // to the signin page.
-    console.log(req);
     if (!req.isAuthenticated()) {
         res.redirect('/signin');
     } else {
         var user = req.user;
         console.log(user);
-
-        if (user !== undefined) {
-            user = user.toJSON();
-        }
 
         res.render('index', {title: 'Oauth Test', user: user});
     }

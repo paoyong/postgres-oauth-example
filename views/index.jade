@@ -8,7 +8,7 @@ block content
     p Goal is to have twitter, google+, facebook, and local working.
     if user
         p Logged in as 
-            span= user.username
-            span= user.name
+            span= user.local.username
+            span= user.facebook.name
     
     a(href="/signout", title="sign out") Sign Out
