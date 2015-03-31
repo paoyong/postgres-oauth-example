@@ -1,6 +1,7 @@
 var knex = require('knex')({
     client: 'postgres',
-    debug   : true,
+    // Uncomment to enable SQL query logging in console.
+    // debug   : true,
     connection: {
         host    : '127.0.0.1',
         user    : 'postgres',

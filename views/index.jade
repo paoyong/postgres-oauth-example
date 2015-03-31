@@ -7,8 +7,14 @@ block content
             span= errorMessage
     p Goal is to have twitter, google+, facebook, and local working.
     if user
-        p Logged in as 
-            span= user.local.username
-            span= user.facebook.name
+        h4 Logged in with 
+            if user.local.username
+                h5 Local Login
+                p= user.local.username
+            if user.facebook.token
+                h5 Facebook Oauth
+                p= user.facebook.name
+                p= user.facebook.email
+
     
     a(href="/signout", title="sign out") Sign Out
