@@ -1,5 +1,5 @@
 var DB = require('./db').DB,
-    knex = DB.knex();
+    knex = DB.knex;
 
 var User = DB.Model.extend({
     tableName: 'users',
