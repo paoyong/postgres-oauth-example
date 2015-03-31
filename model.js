@@ -60,8 +60,6 @@ var Google = DB.Model.extend({
 //     },
 // }
 function grabUserCredentials(userId, callback) {
-    console.log('calling grabUserCredentials on user ' + userId);
-
     // Skeleton JSON
     var loginUser = {
         local: {
@@ -119,7 +117,6 @@ function grabUserCredentials(userId, callback) {
             loginUser.google.email = row.g_email;
             loginUser.google.name = row.g_name;
 
-            console.log('Successful grabUserCredentials');
             callback(null, loginUser);
         }
     });
