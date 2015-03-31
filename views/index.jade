@@ -15,6 +15,8 @@ block content
                 h5 Facebook Oauth
                 p= user.facebook.name
                 p= user.facebook.email
-
+            if user.twitter.token
+                h5 Twitter Oauth
+                p= user.twitter.displayName
     
     a(href="/signout", title="sign out") Sign Out

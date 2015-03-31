@@ -75,6 +75,7 @@ function grabUserCredentials(userId, callback) {
         twitter: {
             id: userId, 
             token: null,
+            twitterId: null,
             displayName: null,
             username: null,
         },
@@ -90,29 +91,31 @@ function grabUserCredentials(userId, callback) {
     // to fill in loginUser JSON.
     knex.select('users.id', 'users.username', 'users.password',
                 'facebook.token as fb_token', 'facebook.email as fb_email', 'facebook.name as fb_name',
-                'twitter.token as tw_token', 'twitter.display_name as tw_disp_name', 'twitter.username as tw_username',
+                'twitter.token as tw_token', 'twitter.display_name as tw_disp_name', 'twitter.username as tw_username', 'twitter.twitter_id as tw_id',
                 'google.token as g_token', 'google.email as g_email', 'google.name as g_name')
                 .from('users')
                 .leftOuterJoin('facebook', 'facebook.id', '=', 'users.id')
-                .leftOuterJoin('twitter', 'twitter.id', '=', 'facebook.id')
-                .leftOuterJoin('google', 'google.id', '=', 'twitter.id')
+                .leftOuterJoin('twitter', 'twitter.id', '=', 'users.id')
+                .leftOuterJoin('google', 'google.id', '=', 'users.id')
                 .where('users.id', '=', userId).then(function(row) {
         row = row[0];
 
         if (!row) {
             callback('Could not find user with that ID', null);
         } else {
-            // We only want the first result of the query.
-            
             // Fill in loginUser JSON
             loginUser.local.username = row.username;
             loginUser.local.password = row.password;
+
             loginUser.facebook.token = row.fb_token;
             loginUser.facebook.email = row.fb_email;
             loginUser.facebook.name = row.fb_name;
+
             loginUser.twitter.token = row.tw_token;
+            loginUser.twitter.twitterId = row.tw_id;
             loginUser.twitter.displayName = row.tw_disp_name;
             loginUser.twitter.username = row.tw_username;
+
             loginUser.google.token = row.g_token;
             loginUser.google.email = row.g_email;
             loginUser.google.name = row.g_name;

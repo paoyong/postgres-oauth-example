@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS facebook (
 CREATE TABLE IF NOT EXISTS twitter (
     id              SERIAL,
     token           VARCHAR(100) NOT NULL,
+    twitter_id      VARCHAR(100) UNIQUE,
     display_name    VARCHAR(100),
     username        VARCHAR(100),
     PRIMARY KEY (id),

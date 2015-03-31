@@ -1,6 +1,7 @@
 var config           = require('./config.js'),
     LocalStrategy    = require('passport-local').Strategy,
     FacebookStrategy = require('passport-facebook').Strategy,
+    TwitterStrategy  = require('passport-twitter').Strategy,
     Model            = require('./model.js'),
     bcrypt           = require('bcrypt-nodejs'),
     User             = Model.User;
@@ -37,11 +38,11 @@ module.exports = function(passport) {
         clientSecret    : config.facebookAuth.clientSecret,
         callbackURL     : config.facebookAuth.callbackURL
     }, function(token, refreshToken, profile, done) {
+        console.log(profile);
         process.nextTick(function() {
             new Model.Facebook({ facebook_id: profile.id }).fetch().then(function(fbUser) {
                 if (fbUser) {
                     // TODO: Handle case where there IS user, but no facebook user
-                    console.log(fbUser);
                     return done(null, fbUser);
                 } else {
                     // If there is no user found, then create one
@@ -49,16 +50,48 @@ module.exports = function(passport) {
                         var newUserId = user.toJSON().id;
 
                         var newFBUser = {
-                            id: newUserId,
-                            token: token,
-                            facebook_id: profile.id,
-                            email: profile.emails[0].value,
-                            name: profile.name.givenName + ' ' + profile.name.familyName
+                            id          : newUserId,
+                            token       : token,
+                            facebook_id : profile.id,
+                            email       : profile.emails[0].value,
+                            name        : profile.name.givenName + ' ' + profile.name.familyName
                         };
 
                         // Create new Facebook user with token.
                         new Model.Facebook(newFBUser).save({}, { method: 'insert' }).then(function(facebook) {
                             return done(null, newFBUser);
+                        });
+                    });
+                }
+            });
+        });
+    }));
+
+    passport.use(new TwitterStrategy({
+        consumerKey    : config.twitterAuth.consumerKey,
+        consumerSecret : config.twitterAuth.consumerSecret,
+        callbackURL    : config.twitterAuth.callbackURL
+    }, function(token, tokenSecret, profile, done) {
+        process.nextTick(function() {
+            new Model.Twitter({twitter_id: profile.id}).fetch().then(function(twUser) {
+                if (twUser) {
+                    return done(null, twUser);
+                } else {
+                    // Twitter user not found. Create a new one.
+                    new User().save().then(function(user) {
+                        var newUserId = user.toJSON().id;
+
+                        var newTWUser = {
+                            id           : newUserId,
+                            token        : token,
+                            twitter_id   : profile.id,
+                            username     : profile.username,
+                            display_name : profile.displayName
+                        };
+
+                        // Create new Facebook user with token.
+                        new Model.Twitter(newTWUser).save({}, { method: 'insert' }).then(function(newlyMadeTWUser) {
+                            return done(null, newTWUser);
                         });
                     });
                 }
