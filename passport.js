@@ -2,6 +2,7 @@ var config           = require('./config.js'),
     LocalStrategy    = require('passport-local').Strategy,
     FacebookStrategy = require('passport-facebook').Strategy,
     TwitterStrategy  = require('passport-twitter').Strategy,
+    GoogleStrategy   = require('passport-google-oauth').OAuth2Strategy,
     Model            = require('./model.js'),
     bcrypt           = require('bcrypt-nodejs'),
     User             = Model.User;
@@ -92,6 +93,34 @@ module.exports = function(passport) {
                         // Create new Facebook user with token.
                         new Model.Twitter(newTWUser).save({}, { method: 'insert' }).then(function(newlyMadeTWUser) {
                             return done(null, newTWUser);
+                        });
+                    });
+                }
+            });
+        });
+    }));
+
+    passport.use(new GoogleStrategy({
+        clientID     : config.googleAuth.clientID,
+        clientSecret : config.googleAuth.clientSecret,
+        callbackURL  : config.googleAuth.callbackURL
+    }, function(token, refreshToken, profile, done) {
+        process.nextTick(function() {
+            new Model.Google({google_id: profile.id}).fetch().then(function(goUser) {
+                if (goUser) {
+                    return done(null, goUser);
+                } else {
+                    Model.createNewUser(function(newUserId) {
+                        var newGOUser = {
+                            id           : newUserId,
+                            token        : token,
+                            google_id    : profile.id,
+                            email        : profile.emails[0].value,
+                            display_name : profile.displayName
+                        };
+
+                        new Model.Google(newGOUser).save({}, { method: 'insert' }).then(function(newlyMadeGOUser) {
+                            return done(null, newGOUser);
                         });
                     });
                 }
