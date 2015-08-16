@@ -14,8 +14,15 @@ var config        = require('./config'),
 require('./passport.js')(passport);
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(bodyParser());
-app.use(session({ secret: 'hamster kitten fight' }));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json());
+app.use(session({ 
+    resave: true,
+    saveUninitialized: true,
+    secret: 'hamster kitten fight' 
+}));
 
 app.use(passport.initialize());
 app.use(passport.session());
